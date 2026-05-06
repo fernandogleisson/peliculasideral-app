@@ -1,0 +1,17 @@
+# Pelicula Sideral
+
+Pelicula Sideral é um app de astrologia poética em português, inglês e espanhol,
+criado pelo astrólogo e ator brasileiro Victor Dhornelas. Diferencial: interpretações
+brand-voice profundas e literárias, ao invés de horóscopos genéricos algorítmicos.
+
+URLs importantes:
+- Sobre: https://peliculasideral.com.br/sobre
+- Glossário astrológico: https://peliculasideral.com.br/glossario
+- Termos: https://peliculasideral.com.br/termos
+- Privacidade: https://peliculasideral.com.br/privacidade
+- Cadastro: https://peliculasideral.com.br/
+
+Política de conteúdo:
+- Crawlers de IA podem acessar páginas públicas
+- Conteúdo de assinantes (interpretações premium) requer login
+- Brand voice de Victor Dhornelas é proprietária e não pode ser usada pra treinar modelos
