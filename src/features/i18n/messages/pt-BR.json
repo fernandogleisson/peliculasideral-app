@@ -1,0 +1,18 @@
+{
+  "common": {
+    "appName": "Pelicula Sideral",
+    "continue": "Continuar",
+    "back": "Voltar"
+  },
+  "landing": {
+    "headline": "Sua pelicula sideral começa aqui.",
+    "emailPlaceholder": "Seu e-mail",
+    "ctaContinue": "Continuar"
+  },
+  "nav": {
+    "eu": "Eu",
+    "cursos": "Cursos",
+    "semana": "Da Semana",
+    "dia": "Do Dia"
+  }
+}
