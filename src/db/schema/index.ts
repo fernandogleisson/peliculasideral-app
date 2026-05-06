@@ -1,2 +1,2 @@
 // Re-exports de todos os schemas. Populado em Phase D.
-export {};
+export * from './profiles';
