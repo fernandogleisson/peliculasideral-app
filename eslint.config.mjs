@@ -13,6 +13,12 @@ const config = [
     },
   },
   {
+    files: ['scripts/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     ignores: ['.next/**', 'node_modules/**', 'src/db/migrations/**', '.husky/_/**'],
   },
 ];
