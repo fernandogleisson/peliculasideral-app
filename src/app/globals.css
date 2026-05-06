@@ -46,6 +46,20 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Paleta elemental Pelicula Sideral (fogo / terra / ar / agua) */
+  --color-fogo-primary: #e63946;
+  --color-fogo-light: #f4a4ab;
+  --color-fogo-dark: #a02029;
+  --color-terra-primary: #588157;
+  --color-terra-light: #a1c49c;
+  --color-terra-dark: #3a5a3a;
+  --color-ar-primary: #ffb400;
+  --color-ar-light: #ffd66e;
+  --color-ar-dark: #b07f00;
+  --color-agua-primary: #0077b6;
+  --color-agua-light: #5da9cd;
+  --color-agua-dark: #04527e;
 }
 
 :root {
