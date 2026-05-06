@@ -2,3 +2,4 @@
 export * from './profiles';
 export * from './birth-data-change-log';
 export * from './lgpd-consent-log';
+export * from './astrologer-chart-cache';
