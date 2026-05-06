@@ -14,5 +14,12 @@
     "cursos": "Courses",
     "semana": "Of the Week",
     "dia": "Of the Day"
+  },
+  "lgpd": {
+    "banner": {
+      "text": "We use cookies to improve your experience. You can accept all or reject non-essential.",
+      "acceptAll": "Accept all",
+      "rejectNonEssential": "Reject non-essential"
+    }
   }
 }

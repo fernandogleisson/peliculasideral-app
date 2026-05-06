@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { ConsentBanner } from '@/components/lgpd/ConsentBanner';
 
 const locales = ['pt-BR', 'en-US', 'es-419'] as const;
 type Locale = (typeof locales)[number];
@@ -29,6 +30,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       {children}
+      <ConsentBanner />
     </NextIntlClientProvider>
   );
 }
