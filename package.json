@@ -16,6 +16,9 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "design:lint": "design.md lint DESIGN.md",
+    "design:export": "design.md export DESIGN.md --format css-tailwind --output src/app/design-tokens.css",
+    "design:diff": "design.md diff DESIGN.md DESIGN.prev.md",
     "prepare": "husky"
   },
   "lint-staged": {
