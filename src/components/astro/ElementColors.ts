@@ -1,8 +1,24 @@
 export const ELEMENT_COLORS = {
-  fogo: { primary: '#E63946', light: '#F4A4AB', dark: '#A02029' },
-  terra: { primary: '#588157', light: '#A1C49C', dark: '#3A5A3A' },
-  ar: { primary: '#FFB400', light: '#FFD66E', dark: '#B07F00' },
-  agua: { primary: '#0077B6', light: '#5DA9CD', dark: '#04527E' },
+  fogo: {
+    primary: 'var(--color-fogo)',
+    light: 'var(--color-fogo-light)',
+    dark: 'var(--color-fogo-dark)',
+  },
+  terra: {
+    primary: 'var(--color-terra)',
+    light: 'var(--color-terra-light)',
+    dark: 'var(--color-terra-dark)',
+  },
+  ar: {
+    primary: 'var(--color-ar)',
+    light: 'var(--color-ar-light)',
+    dark: 'var(--color-ar-dark)',
+  },
+  agua: {
+    primary: 'var(--color-agua)',
+    light: 'var(--color-agua-light)',
+    dark: 'var(--color-agua-dark)',
+  },
 } as const;
 
 export const SIGN_TO_ELEMENT = {
