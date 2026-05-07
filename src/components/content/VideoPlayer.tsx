@@ -20,15 +20,13 @@ export function VideoPlayer({
       playbackId={playbackId}
       metadata={{ video_title: metadataVideoTitle }}
       thumbnailTime={thumbnailTime}
-      style={
-        {
-          '--media-primary-color': 'var(--color-primary)',
-          '--media-secondary-color': 'var(--color-ink-2)',
-          '--media-accent-color': 'var(--color-primary-light)',
-          aspectRatio: '16/9',
-          borderRadius: 'var(--rounded-md, 8px)',
-        } as React.CSSProperties
-      }
+      style={{
+        '--media-primary-color': 'var(--color-primary)',
+        '--media-secondary-color': 'var(--color-ink-2)',
+        '--media-accent-color': 'var(--color-primary-light)',
+        aspectRatio: '16/9',
+        borderRadius: 'var(--rounded-md, 8px)',
+      }}
       className={cn('w-full', className)}
     />
   );
