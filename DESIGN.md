@@ -253,3 +253,133 @@ components:
     typography: '{typography.label-xs}'
     rounded: '{rounded.full}'
 ---
+
+## Overview
+
+**Pelicula é o filme do céu.**
+
+A interface trata cada mapa, cada interpretação, cada conteúdo diário como cena de um filme autoral — letras grandes que respiram, créditos com letter-spacing largo, hierarquia clara entre título e corpo, escolhas tipográficas que evocam revistas culturais e capas de livros de poesia.
+
+A astrologia aqui não é horóscopo de revista popular nem oráculo místico de Instagram. É observação contemplativa, próxima de quem lê Drummond e assiste Wim Wenders. Por isso: **menos ornamento, mais substância**. Mandalas claras e generosas, glifos clássicos sem estilização barroca, paleta restrita com roxo como protagonista e elementos como coadjuvantes.
+
+### Filtro de decisão
+
+Toda decisão visual passa pelo filtro: **"Isto soaria honesto na voz do Victor?"** Se for adornado demais, é ruído. Se for genérico demais, perde alma.
+
+### Referências
+
+Cinema autoral (Wim Wenders, Chantal Akerman) · revistas culturais (Piauí, The Believer) · capas de livros de poesia (Cosac Naify, Companhia das Letras) · tipografia editorial brasileira (Tipos do Acaso, Plau) · diários astrológicos antigos.
+
+### Anti-referências
+
+Co-Star (minimalismo frio brutalista). AstroFlash (popular, gradients, emojis). Sanctuary/Pattern (wellness Instagram). Material Design / Apple HIG genéricos. Glassmorphism, bubbly buttons, neumorfismo.
+
+## Colors
+
+A paleta é **deliberadamente restrita**. Roxo (#7C5CBF) é a marca; aparece em CTAs, links, focus states, ícones ativos. Surfaces dark (preto + grays) criam camadas via incremento de luminosidade. Inks (texto branco com opacidades validadas em WCAG) garantem legibilidade.
+
+**Elementais** (fogo/terra/ar/água) são reservados pra **glifos astrológicos, badges de signos, segmentos da mandala, e variantes light/dark de cada elemento**. NUNCA aparecem em chrome de UI (botões, headers).
+
+**System semantics reusam elementais**: success=terra (crescimento), warning=ar (atenção/movimento), danger=fogo (urgência), info=água (fluxo). Reduz cognitive load e cria coerência conceitual.
+
+Light mode espelha dark com inversão suave: parchment cream (#F0E4C8) como surface, ink escuro, primary roxo mais saturado pra contraste.
+
+## Typography
+
+**Playfair Display** é a serif principal — display, headlines, body. Alto contraste, letterforms elegantes, leitura editorial. Carregada via `next/font/google` self-hosted pelo Vercel.
+
+**JetBrains Mono** é a mono secundária — labels, créditos, números do mapa, código. Substitui Space Mono (mais técnica, melhor pra labels longos).
+
+### Hierarquia
+
+- **Display** (40-56px) só pra heroes. Tracking negativo (-0.02em) pra coesão visual.
+- **Headlines** (20-32px) pra titles e cards. Tracking 0 a -0.01em.
+- **Body** (14-18px) sempre tracking 0. Reading width 65ch pra prosa longa.
+- **Labels mono** (10-14px) com letter-spacing wide (0.15em-0.40em). Look de capítulo de livro/cinema.
+
+### Aplicação
+
+Body em **serif** (Playfair Display) — diferente de Material/Apple. Pelicula é editorial: prosa lê como livro, não como app. Mono **só** em labels curtos, créditos, números.
+
+Numeric display (mono 48px) pros graus do mapa ("24°"). Tracking -0.02em pra coesão com display headline.
+
+## Layout
+
+Mobile-first PWA. Container padding 24px mobile / 32px tablet / 48px desktop. Reading width 65ch em prosa.
+
+Grid base: **8px**. Toda dimensão (padding, margin, gap, height) é múltiplo de 8.
+
+Safe areas iOS via `env(safe-area-inset-*)` em BottomNav e Header. BottomNav 64px alto + safe-area-bottom.
+
+Breakpoints: 0 (mobile-first), 768px (tablet — container alarga), 1024px (desktop — admin layouts; max-width body 720px pra leitura confortável).
+
+## Elevation & Depth
+
+**Cosmic depth.** Pelicula rejeita glassmorphism (atmospheric-glass-style) e rejeita material-design heavy shadows. Profundidade vem de **gradientes radiais sutis** e **bordas-luz 1px**.
+
+### Camadas (dark)
+
+- **0 — fundo cósmico:** preto puro com radial gradient sutilíssimo (centro #0A0A1A, bordas #000). Aplicado em `<body>`.
+- **1 — surface:** #1A1A1A + border 1px white/10. Cards, list items.
+- **2 — elevated:** #2A2A2A + border 1px white/15 + shadow 0 4px 16px black/40. Cards interativos hover, popups inline.
+- **3 — modal/popup:** #3A3A3A + border 1px white/20 + shadow 0 12px 32px black/60 + backdrop overlay/70. Popup interpretação, modal Assinar.
+- **4 — sheet bottom:** igual modal, slide from bottom + handle 32x4px.
+
+### Bordas-luz (signature)
+
+Cada surface acima de 0 ganha **1px border** simulando borda-luz cósmica. Não é glassmorphism — apenas linha fina pra delimitar planos sem usar shadow pesado.
+
+## Shapes
+
+Conservador. Pelicula é editorial, não friendly-saas-startup.
+
+- **none** (0px): cantos retos pra créditos e separators
+- **xs** (2px): badges pequenos
+- **sm** (4px): inputs, chips
+- **DEFAULT** (6px): buttons. **Decisão crítica:** não 12px (bubble). Editorial sóbrio, look Linear/Notion.
+- **md** (8px): cards
+- **lg** (12px): cards elevated, modais
+- **xl** (16px): popups grandes, bottom sheets
+- **full** (9999px): avatars, glifos circulares, dots
+
+## Components
+
+Catálogo de 32 components organizados em 8 grupos:
+
+1. **Layout & Navigation** (5): Header, BottomNav, BackButton, PageHeader, Breadcrumb
+2. **Forms & Inputs** (6): Button (5 variants), IconButton, Input, Textarea, Select, Checkbox/Radio
+3. **Cards & Surfaces** (5): Card, ContentCard, InterpretationCard, Skeleton, Sheet
+4. **Mapa Astral** (7): Mandala, MandalaSegment, PlanetGlyph, AspectGlyph, ElementBadge, HouseRing, MapMetadata
+5. **Conteúdo** (4): HeroBanner, VideoPlayer, AudioPlayer, LessonList
+6. **Feedback & Overlays** (5): Modal, Toast, PaywallOverlay, ConsentBanner, Tooltip
+7. **Identidade** (3): Sparkle (✦), Avatar, Divider
+8. **Specials Fase 1** (2): OnboardingStep, RateLimitMessage
+
+Cada component declara variants e tokens-chave no YAML acima. Implementação completa via shadcn/ui base + customização Pelicula. Detalhamento por component no plan de implementação ([2026-05-06-pelicula-sideral-design-system-plan.md](docs/superpowers/plans/2026-05-06-pelicula-sideral-design-system-plan.md)).
+
+## Do's and Don'ts
+
+### Do
+
+- Use `ink-2` ou `ink-3` em vez de `white/40` arbitrário
+- Use `<Sparkle>` pra loading states, não spinners genéricos
+- Letter-spacing wide só em mono labels curtos
+- Glifos astrológicos via `<PlanetGlyph>`/`<AspectGlyph>`, nunca SVG inline
+- Cores elementais em mandala/glifos/badges. NUNCA em UI chrome
+- Border-luz 1px em vez de heavy shadow
+- Reading width 65ch em prosa
+- Mobile-first sempre
+- Ícones via Lucide (`lucide-react`)
+
+### Don't
+
+- Não use opacidades arbitrárias (`white/40`, `black/30`)
+- Não use cores fora da paleta (laranja, ciano-neon, verde-lima)
+- Não use Tailwind utility cor cru (`text-red-500`)
+- Não use glassmorphism
+- Não use emojis em interpretações (☉🌙) — use SVG
+- Não use letter-spacing em body/serif
+- Não invente novos tokens sem atualizar DESIGN.md
+- Não use `rounded-xl` ou `full` em buttons (são rounded DEFAULT 6px)
+- Não use shadows pesadas (`shadow-2xl`)
+- Não traduza glifos astrológicos (☉ é Sol em qualquer idioma)
