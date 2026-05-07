@@ -1,2 +1,2 @@
 // src/components/ui/Checkbox.tsx — Pelicula wrapper around shadcn Checkbox
-export { Checkbox } from './checkbox';
+export { Checkbox } from './shadcn-checkbox';

@@ -10,4 +10,4 @@ export {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from './select';
+} from './shadcn-select';
