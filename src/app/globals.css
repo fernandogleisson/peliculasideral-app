@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import './design-tokens.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -25,7 +26,6 @@
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
-  --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -34,7 +34,6 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -46,20 +45,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-
-  /* Paleta elemental Pelicula Sideral (fogo / terra / ar / agua) */
-  --color-fogo-primary: #e63946;
-  --color-fogo-light: #f4a4ab;
-  --color-fogo-dark: #a02029;
-  --color-terra-primary: #588157;
-  --color-terra-light: #a1c49c;
-  --color-terra-dark: #3a5a3a;
-  --color-ar-primary: #ffb400;
-  --color-ar-light: #ffd66e;
-  --color-ar-dark: #b07f00;
-  --color-agua-primary: #0077b6;
-  --color-agua-light: #5da9cd;
-  --color-agua-dark: #04527e;
 }
 
 :root {
@@ -137,8 +122,19 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: var(--color-surface);
+    color: var(--color-ink);
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 8px);
+  }
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
   }
 }
