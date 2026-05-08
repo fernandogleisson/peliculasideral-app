@@ -3,32 +3,41 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
+
+const TABS = [
+  { href: '/eu', key: 'eu' },
+  { href: '/cursos', key: 'cursos' },
+  { href: '/pelicula-da-semana', key: 'semana' },
+  { href: '/pelicula-do-dia', key: 'dia' },
+] as const;
 
 export function BottomNav() {
   const pathname = usePathname();
   const t = useTranslations('nav');
 
-  const tabs = [
-    { href: '/eu', label: t('eu') },
-    { href: '/cursos', label: t('cursos') },
-    { href: '/pelicula-da-semana', label: t('semana') },
-    { href: '/pelicula-do-dia', label: t('dia') },
-  ] as const;
-
   return (
-    <nav className="bg-background fixed right-0 bottom-0 left-0 flex border-t" aria-label="Primary">
-      {tabs.map((tab) => {
-        const active = pathname.includes(tab.href);
+    <nav
+      className={cn(
+        'fixed bottom-0 inset-x-0 z-10',
+        'h-16 pb-safe',
+        'border-t border-border bg-surface-1',
+        'flex items-stretch',
+      )}
+    >
+      {TABS.map((tab) => {
+        const active = pathname.startsWith(tab.href);
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex-1 p-3 text-center text-xs ${
-              active ? 'text-fogo-primary font-semibold' : 'text-muted-foreground'
-            }`}
             aria-current={active ? 'page' : undefined}
+            className={cn(
+              'flex-1 flex flex-col items-center justify-center gap-1',
+              active ? 'text-primary' : 'text-ink-2',
+            )}
           >
-            {tab.label}
+            <span className="font-mono text-xs font-semibold tracking-[0.2em]">{t(tab.key)}</span>
           </Link>
         );
       })}

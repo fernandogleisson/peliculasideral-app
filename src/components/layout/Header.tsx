@@ -1,13 +1,24 @@
-import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 
-export function Header() {
-  const t = useTranslations('common');
+export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
+  variant?: 'sticky' | 'transparent';
+}
+
+export function Header({ variant = 'sticky', className, children, ...props }: HeaderProps) {
   return (
-    <header className="bg-background sticky top-0 z-10 border-b p-3">
-      <Link href="/eu" className="font-bold">
-        {t('appName')}
-      </Link>
+    <header
+      className={cn(
+        'z-10 border-b border-border',
+        'h-14',
+        'pt-safe',
+        'flex items-center px-6',
+        variant === 'sticky' && 'sticky top-0 backdrop-blur-md bg-surface/90',
+        variant === 'transparent' && 'bg-transparent',
+        className,
+      )}
+      {...props}
+    >
+      {children}
     </header>
   );
 }
