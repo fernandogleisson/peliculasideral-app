@@ -4,17 +4,17 @@ import { ELEMENT_COLORS, SIGN_TO_ELEMENT } from './ElementColors';
 describe('ElementColors', () => {
   it('maps all 12 signs to an element', () => {
     expect(Object.keys(SIGN_TO_ELEMENT).length).toBe(12);
-    for (const [, element] of Object.entries(SIGN_TO_ELEMENT)) {
-      expect(ELEMENT_COLORS[element as keyof typeof ELEMENT_COLORS]).toBeDefined();
+    for (const element of Object.values(SIGN_TO_ELEMENT)) {
+      expect(ELEMENT_COLORS[element]).toBeDefined();
+      expect(ELEMENT_COLORS[element].primary).toMatch(/^var\(--color-/);
     }
   });
 
-  it('exposes primary/light/dark for each element', () => {
-    for (const element of Object.keys(ELEMENT_COLORS) as Array<keyof typeof ELEMENT_COLORS>) {
-      const colors = ELEMENT_COLORS[element];
-      expect(colors.primary).toMatch(/^#[0-9A-Fa-f]{6}$/);
-      expect(colors.light).toMatch(/^#[0-9A-Fa-f]{6}$/);
-      expect(colors.dark).toMatch(/^#[0-9A-Fa-f]{6}$/);
+  it('exposes 4 elements with primary/light/dark', () => {
+    for (const element of ['fogo', 'terra', 'ar', 'agua'] as const) {
+      expect(ELEMENT_COLORS[element]).toHaveProperty('primary');
+      expect(ELEMENT_COLORS[element]).toHaveProperty('light');
+      expect(ELEMENT_COLORS[element]).toHaveProperty('dark');
     }
   });
 });

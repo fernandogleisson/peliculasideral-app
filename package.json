@@ -16,6 +16,9 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "design:lint": "design.md lint DESIGN.md",
+    "design:export": "node scripts/design-export-css.mjs",
+    "design:diff": "design.md diff DESIGN.md DESIGN.prev.md",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -54,6 +57,7 @@
     "@commitlint/cli": "^20.5.3",
     "@commitlint/config-conventional": "^20.5.3",
     "@eslint/eslintrc": "^3.3.5",
+    "@google/design.md": "^0.1.1",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
