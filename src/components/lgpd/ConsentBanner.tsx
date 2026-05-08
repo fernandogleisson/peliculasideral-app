@@ -3,10 +3,14 @@
 import { useState, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
+
 const STORAGE_KEY = 'lgpd_consent_v1';
 const VERSION = '1.0';
 
 interface StoredConsent {
+  necessary: true;
   analytics: boolean;
   marketing: boolean;
   ts: number;
@@ -38,13 +42,21 @@ export function ConsentBanner() {
   // Local override so clicking a button hides the banner instantly without a
   // round-trip through the storage event.
   const [dismissed, setDismissed] = useState(false);
+  const [customizing, setCustomizing] = useState(false);
+  const [analytics, setAnalytics] = useState(true);
+  const [marketing, setMarketing] = useState(false);
 
   const t = useTranslations('lgpd');
 
   const show = stored !== 'ssr' && !stored && !dismissed;
 
   function persist(categories: { analytics: boolean; marketing: boolean }) {
-    const value: StoredConsent = { ...categories, ts: Date.now(), version: VERSION };
+    const value: StoredConsent = {
+      necessary: true,
+      ...categories,
+      ts: Date.now(),
+      version: VERSION,
+    };
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
     } catch {
@@ -62,24 +74,44 @@ export function ConsentBanner() {
       role="dialog"
       aria-live="polite"
       aria-label="Consentimento LGPD"
-      className="bg-card fixed right-0 bottom-0 left-0 z-50 border-t p-4 shadow-lg"
+      className="fixed inset-x-4 bottom-4 z-50 rounded-lg border border-border-strong bg-surface-2 p-6 shadow-xl sm:inset-x-auto sm:right-4 sm:max-w-md"
     >
-      <p className="text-sm">{t('banner.text')}</p>
-      <div className="mt-3 flex gap-2">
-        <button
-          type="button"
-          onClick={() => persist({ analytics: true, marketing: true })}
-          className="bg-primary text-primary-foreground rounded px-4 py-2"
-        >
+      <p className="mb-4 font-serif text-base text-ink">{t('banner.text')}</p>
+
+      {customizing && (
+        <div className="mb-4 flex flex-col gap-3">
+          <label className="flex items-center gap-2 text-sm text-ink">
+            <Checkbox checked disabled />
+            {t('banner.necessary')}
+          </label>
+          <label className="flex items-center gap-2 text-sm text-ink">
+            <Checkbox checked={analytics} onCheckedChange={(v) => setAnalytics(v === true)} />
+            {t('banner.analytics')}
+          </label>
+          <label className="flex items-center gap-2 text-sm text-ink">
+            <Checkbox checked={marketing} onCheckedChange={(v) => setMarketing(v === true)} />
+            {t('banner.marketing')}
+          </label>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button variant="primary" onClick={() => persist({ analytics: true, marketing: true })}>
           {t('banner.acceptAll')}
-        </button>
-        <button
-          type="button"
-          onClick={() => persist({ analytics: false, marketing: false })}
-          className="rounded border px-4 py-2"
-        >
+        </Button>
+        <Button variant="secondary" onClick={() => persist({ analytics: false, marketing: false })}>
           {t('banner.rejectNonEssential')}
-        </button>
+        </Button>
+        {!customizing && (
+          <Button variant="ghost" onClick={() => setCustomizing(true)}>
+            {t('banner.customize')}
+          </Button>
+        )}
+        {customizing && (
+          <Button variant="ghost" onClick={() => persist({ analytics, marketing })}>
+            {t('banner.savePreferences')}
+          </Button>
+        )}
       </div>
     </div>
   );

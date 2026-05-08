@@ -20,7 +20,12 @@
     "banner": {
       "text": "Usamos cookies para melhorar sua experiência. Você pode aceitar todos ou recusar não-essenciais.",
       "acceptAll": "Aceitar todos",
-      "rejectNonEssential": "Recusar não-essenciais"
+      "rejectNonEssential": "Recusar não-essenciais",
+      "necessary": "Cookies necessários (sempre)",
+      "analytics": "Cookies analíticos",
+      "marketing": "Cookies de marketing",
+      "customize": "Personalizar",
+      "savePreferences": "Salvar preferências"
     }
   }
 }
