@@ -52,7 +52,11 @@ export function chartHash(input: BirthChartInput): string {
 }
 
 export async function fetchBirthChart(input: BirthChartInput): Promise<BirthChartOutput> {
-  if (!env.RAPIDAPI_KEY) throw new Error('RAPIDAPI_KEY not configured');
+  if (!env.RAPIDAPI_KEY) {
+    // Closed beta: mock chart when Astrologer key absent. Lets onboarding flow
+    // complete end-to-end before RapidAPI subscription is provisioned (PL-150).
+    return mockBirthChart(input);
+  }
 
   const [year, month, day] = input.date.split('-').map((s) => parseInt(s, 10));
   const [hour, minute] = input.time.split(':').map((s) => parseInt(s, 10));
@@ -82,4 +86,73 @@ export async function fetchBirthChart(input: BirthChartInput): Promise<BirthChar
     throw new Error(`astrologer ${res.status}`);
   }
   return res.json() as Promise<BirthChartOutput>;
+}
+
+const SIGN_CYCLE = [
+  'aries',
+  'taurus',
+  'gemini',
+  'cancer',
+  'leo',
+  'virgo',
+  'libra',
+  'scorpio',
+  'sagittarius',
+  'capricorn',
+  'aquarius',
+  'pisces',
+] as const;
+
+/**
+ * Deterministic placeholder chart so onboarding works without an Astrologer
+ * subscription. Distributes planets across signs by birthDate hash —
+ * different users get different mocks, same user gets same mock.
+ * Replace by real fetch once RAPIDAPI_KEY is provisioned (PL-150).
+ */
+function mockBirthChart(input: BirthChartInput): BirthChartOutput {
+  const seed = parseInt(input.date.replaceAll('-', ''), 10) % 12;
+  const planetNames = [
+    'sun',
+    'moon',
+    'mercury',
+    'venus',
+    'mars',
+    'jupiter',
+    'saturn',
+    'uranus',
+    'neptune',
+    'pluto',
+  ];
+  return {
+    planets: planetNames.map((name, idx) => ({
+      name,
+      sign: SIGN_CYCLE[(seed + idx) % 12],
+      house: ((seed + idx) % 12) + 1,
+      degree: (idx * 17 + seed * 3) % 30,
+      isRetrograde: idx % 5 === 0,
+    })),
+    houses: Array.from({ length: 12 }, (_, i) => ({
+      number: i + 1,
+      sign: SIGN_CYCLE[(seed + i) % 12],
+      cuspDegree: i * 30,
+    })),
+    aspects: [
+      { from: 'sun', to: 'moon', aspect: 'trine', orb: 2.4 },
+      { from: 'sun', to: 'mars', aspect: 'square', orb: 1.8 },
+      { from: 'venus', to: 'jupiter', aspect: 'sextile', orb: 0.9 },
+    ],
+    nodes: {
+      north: { sign: SIGN_CYCLE[seed], house: 1, degree: 4 },
+      south: { sign: SIGN_CYCLE[(seed + 6) % 12], house: 7, degree: 4 },
+    },
+    chiron: {
+      sign: SIGN_CYCLE[(seed + 3) % 12],
+      house: 4,
+      degree: 11,
+      isRetrograde: false,
+    },
+    lilith: { sign: SIGN_CYCLE[(seed + 7) % 12], house: 8, degree: 20 },
+    svg: '',
+    api_version: 'mock-1.0',
+  };
 }
