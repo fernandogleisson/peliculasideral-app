@@ -1,0 +1,25 @@
+{
+  "common": {
+    "appName": "Pelicula Sideral",
+    "continue": "Continuar",
+    "back": "Voltar"
+  },
+  "landing": {
+    "headline": "Sua pelicula sideral começa aqui.",
+    "emailPlaceholder": "Seu e-mail",
+    "ctaContinue": "Continuar"
+  },
+  "nav": {
+    "eu": "Eu",
+    "cursos": "Cursos",
+    "semana": "Da Semana",
+    "dia": "Do Dia"
+  },
+  "lgpd": {
+    "banner": {
+      "text": "Usamos cookies para melhorar sua experiência. Você pode aceitar todos ou recusar não-essenciais.",
+      "acceptAll": "Aceitar todos",
+      "rejectNonEssential": "Recusar não-essenciais"
+    }
+  }
+}
