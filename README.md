@@ -34,3 +34,33 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Design System
+
+Source of truth: [`DESIGN.md`](./DESIGN.md) na raiz do repo.
+
+### Para humanos
+
+- YAML frontmatter define tokens (cores, typography, rounded, spacing, components)
+- Markdown body explica filosofia visual, do's and don'ts
+- Mudanças via PR; CI valida via `@google/design.md lint`
+
+### Para agentes IA
+
+Subagents que tocam UI/CSS DEVEM seguir este protocolo:
+
+1. **Antes de implementar:** ler `DESIGN.md` na raiz do repo
+2. **Usar APENAS tokens declarados.** Nada de `text-red-500`, `white/40`, `rounded-xl` em buttons
+3. **Components em §8 são fonte de verdade** — não inventar novos sem atualizar DESIGN.md
+4. **Glifos astrológicos via `<PlanetGlyph>` / `<AspectGlyph>` / `<ElementBadge>`**, nunca SVG inline
+5. **Ícones via Lucide** (`lucide-react`), nunca SVG inline
+6. **Reading width 65ch** em prosa longa
+7. **Mobile-first sempre**
+
+Se precisar de algo não documentado, **pause e proponha** via comentário no PR.
+
+### Comandos
+
+    pnpm design:lint    # Valida DESIGN.md (broken-ref, contrast-ratio, missing-primary)
+    pnpm design:export  # Gera src/app/design-tokens.css (Tailwind v4 @theme block)
+    pnpm design:diff    # Compara com versão anterior (para PRs grandes)
