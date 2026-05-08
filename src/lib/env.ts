@@ -8,6 +8,12 @@
  */
 import { z } from 'zod';
 
+// Treat empty strings (common in .env files) as missing values so optional
+// fields don't trip min-length / format validators when left blank.
+const NORMALIZED_ENV: Record<string, string | undefined> = Object.fromEntries(
+  Object.entries(process.env).map(([k, v]) => [k, v === '' ? undefined : v]),
+);
+
 const envSchema = z.object({
   // ─── Supabase ────────────────────────────────────────────────────────────
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
@@ -69,5 +75,5 @@ const envSchema = z.object({
   NEXT_PUBLIC_SUPPORTED_LOCALES: z.string().default('pt-BR,en-US,es-419'),
 });
 
-export const env = envSchema.parse(process.env);
+export const env = envSchema.parse(NORMALIZED_ENV);
 export type Env = z.infer<typeof envSchema>;
