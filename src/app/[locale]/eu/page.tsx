@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { EmailConfirmBanner } from '@/components/auth/EmailConfirmBanner';
 import { loadEuView, loadShortInterpretations } from '@/features/mapa-natal/queries';
 import {
   chartToPlanetGroups,
@@ -100,20 +101,23 @@ export default async function EuPage() {
   const isPremium = profile.tier === 'premium';
 
   return (
-    <EuView
-      displayName={profile.displayName ?? profile.username}
-      username={profile.username}
-      birthDate={profile.birthDate}
-      birthTime={profile.birthTime}
-      birthCity={profile.birthCity}
-      birthState={profile.birthState ?? undefined}
-      isPremium={isPremium}
-      sunSummary={sunSummary}
-      groups={groups}
-      chartData={chartData}
-      houseCards={houseCards}
-      aspectCards={aspectCards}
-      paywallSample={paywallSample}
-    />
+    <>
+      <EmailConfirmBanner />
+      <EuView
+        displayName={profile.displayName ?? profile.username}
+        username={profile.username}
+        birthDate={profile.birthDate}
+        birthTime={profile.birthTime}
+        birthCity={profile.birthCity}
+        birthState={profile.birthState ?? undefined}
+        isPremium={isPremium}
+        sunSummary={sunSummary}
+        groups={groups}
+        chartData={chartData}
+        houseCards={houseCards}
+        aspectCards={aspectCards}
+        paywallSample={paywallSample}
+      />
+    </>
   );
 }

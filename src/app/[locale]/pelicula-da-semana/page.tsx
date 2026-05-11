@@ -1,9 +1,11 @@
 import { Sparkle } from '@/components/identity/Sparkle';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { EmailConfirmBanner } from '@/components/auth/EmailConfirmBanner';
 
-export default function PeliculaDaSemanaPage() {
+export default async function PeliculaDaSemanaPage() {
   return (
     <>
+      <EmailConfirmBanner />
       <main className="min-h-dvh px-6 py-12 max-w-md mx-auto pb-24">
         <Sparkle size="lg" className="text-primary" />
         <h1 className="mt-6 font-serif text-3xl text-ink">Pelicula da Semana</h1>
