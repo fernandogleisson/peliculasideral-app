@@ -2,15 +2,29 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { OnboardingStep } from '@/components/onboarding/OnboardingStep';
 import { Input } from '@/components/ui/Input';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { BR_CITIES, type CityEntry } from './cities-br';
 import { submitOnboarding, type OnboardingInput } from './actions';
+import { checkEmailExists } from '@/features/auth/check-email-exists';
+import { signUpInline } from '@/features/auth/actions';
 
-type Step = 'name' | 'username' | 'date' | 'time' | 'city' | 'consent' | 'generating';
+type Step =
+  | 'email'
+  | 'password'
+  | 'name'
+  | 'username'
+  | 'date'
+  | 'time'
+  | 'city'
+  | 'consent'
+  | 'generating';
 
 interface FormState {
+  email: string;
+  password: string;
   displayName: string;
   username: string;
   birthDate: string;
@@ -21,6 +35,8 @@ interface FormState {
 }
 
 const INITIAL: FormState = {
+  email: '',
+  password: '',
   displayName: '',
   username: '',
   birthDate: '',
@@ -30,8 +46,14 @@ const INITIAL: FormState = {
   lgpdAccept: false,
 };
 
-export function OnboardingClient() {
-  const [step, setStep] = useState<Step>('name');
+interface OnboardingClientProps {
+  /** Se true, user já está autenticado: pula steps email/password. */
+  alreadyLoggedIn?: boolean;
+}
+
+export function OnboardingClient({ alreadyLoggedIn = false }: OnboardingClientProps = {}) {
+  const router = useRouter();
+  const [step, setStep] = useState<Step>(alreadyLoggedIn ? 'name' : 'email');
   const [form, setForm] = useState<FormState>(INITIAL);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -72,6 +94,91 @@ export function OnboardingClient() {
     });
   }
 
+  if (step === 'email') {
+    function onSubmitEmail() {
+      setError(null);
+      startTransition(async () => {
+        const { exists } = await checkEmailExists(form.email.trim());
+        if (exists) {
+          router.replace(`/entrar?email=${encodeURIComponent(form.email.trim())}&from=onboarding`);
+          return;
+        }
+        next('password');
+      });
+    }
+
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+
+    return (
+      <OnboardingStep
+        variant="input"
+        title="Vamos começar pelo seu email"
+        subtitle="Pra criar sua conta e salvar seu mapa."
+        showBack={false}
+        nextLabel={pending ? 'Verificando…' : 'Continuar'}
+        nextDisabled={!emailValid || pending}
+        onNext={onSubmitEmail}
+      >
+        <Input
+          autoFocus
+          type="email"
+          value={form.email}
+          onChange={(e) => update('email', e.target.value)}
+          placeholder="seu@email.com"
+          autoComplete="email"
+        />
+        {error && <p className="mt-2 text-sm text-danger">{error}</p>}
+        <p className="mt-4 text-xs text-ink-3 text-center">
+          Já tem conta?{' '}
+          <Link href="/entrar" className="text-primary underline">
+            Entrar
+          </Link>
+        </p>
+      </OnboardingStep>
+    );
+  }
+
+  if (step === 'password') {
+    function onSubmitPassword() {
+      setError(null);
+      startTransition(async () => {
+        const result = await signUpInline({
+          email: form.email.trim(),
+          password: form.password,
+        });
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+        next('name');
+      });
+    }
+
+    const passwordOk = form.password.length >= 8;
+
+    return (
+      <OnboardingStep
+        variant="input"
+        title="Cria uma senha"
+        subtitle="Mínimo 8 caracteres. Vai usar isso pra entrar de volta."
+        nextLabel={pending ? 'Criando…' : 'Criar conta'}
+        nextDisabled={!passwordOk || pending}
+        onNext={onSubmitPassword}
+      >
+        <Input
+          autoFocus
+          type="password"
+          value={form.password}
+          onChange={(e) => update('password', e.target.value)}
+          placeholder="••••••••"
+          minLength={8}
+          autoComplete="new-password"
+        />
+        {error && <p className="mt-2 text-sm text-danger">{error}</p>}
+      </OnboardingStep>
+    );
+  }
+
   if (step === 'name') {
     return (
       <OnboardingStep
@@ -95,21 +202,36 @@ export function OnboardingClient() {
   }
 
   if (step === 'username') {
+    const usernameSanitized = form.username.replace(/[^a-z0-9_]/g, '');
+    const usernameInvalid = usernameSanitized.length > 0 && usernameSanitized !== form.username;
     return (
       <OnboardingStep
         variant="input"
         title="Escolhe um @"
-        subtitle="Único e curto. Só letras, números e _."
-        nextDisabled={form.username.trim().length < 3}
-        onNext={() => next('date')}
+        subtitle="Único e curto. Só letras, números e underline (_). Sem espaços, acentos ou pontos."
+        nextDisabled={usernameSanitized.length < 3}
+        onNext={() => {
+          // Garante que o que vai pro submit já está sanitizado.
+          update('username', usernameSanitized);
+          next('date');
+        }}
       >
         <Input
           autoFocus
           value={form.username}
-          onChange={(e) => update('username', e.target.value.toLowerCase())}
+          onChange={(e) =>
+            update('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))
+          }
           placeholder="maria"
           pattern="[a-z0-9_]+"
+          error={usernameInvalid}
+          aria-invalid={usernameInvalid}
         />
+        {usernameInvalid && (
+          <p className="mt-2 text-xs text-danger">
+            Removemos caracteres não permitidos. Use só a-z, 0-9 e _.
+          </p>
+        )}
       </OnboardingStep>
     );
   }
