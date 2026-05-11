@@ -18,12 +18,12 @@ export const metadata = {
 
 export default async function EuPage() {
   const supabase = await createSupabaseServerClient().catch(() => null);
-  if (!supabase) redirect('/signup');
+  if (!supabase) redirect('/entrar');
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect('/signup');
+  if (!user) redirect('/entrar');
 
   const data = await loadEuView(user.id);
   if (!data) redirect('/onboarding');

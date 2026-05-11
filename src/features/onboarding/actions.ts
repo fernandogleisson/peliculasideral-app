@@ -35,10 +35,26 @@ export type OnboardingInput = z.infer<typeof onboardingSchema>;
 
 export type OnboardingResult = { ok: true } | { ok: false; error: string };
 
+const FIELD_LABELS_PT: Record<string, string> = {
+  displayName: 'Nome',
+  username: '@ (username)',
+  birthDate: 'Data de nascimento',
+  birthTime: 'Hora de nascimento',
+  birthCity: 'Cidade de nascimento',
+  birthLat: 'Coordenada (lat)',
+  birthLng: 'Coordenada (lng)',
+  birthTz: 'Fuso horário',
+  lgpdAccept: 'Aceite dos termos',
+};
+
 export async function submitOnboarding(input: OnboardingInput): Promise<OnboardingResult> {
   const parse = onboardingSchema.safeParse(input);
   if (!parse.success) {
-    return { ok: false, error: parse.error.issues[0]?.message ?? 'Dados inválidos.' };
+    const issue = parse.error.issues[0];
+    const field = issue?.path?.[0]?.toString() ?? '';
+    const label = FIELD_LABELS_PT[field] ?? field ?? 'Campo';
+    const message = issue?.message ?? 'inválido';
+    return { ok: false, error: `${label}: ${message}` };
   }
   const data = parse.data;
 

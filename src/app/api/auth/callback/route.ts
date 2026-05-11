@@ -14,14 +14,14 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/eu';
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/signup?error=missing_code`);
+    return NextResponse.redirect(`${origin}/entrar?error=missing_code`);
   }
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    return NextResponse.redirect(`${origin}/signup?error=${encodeURIComponent(error.message)}`);
+    return NextResponse.redirect(`${origin}/entrar?error=${encodeURIComponent(error.message)}`);
   }
 
   // Decide first-run destination: if profile row exists, go to /eu; else /onboarding.
