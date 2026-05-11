@@ -89,3 +89,33 @@ export async function signOut(): Promise<void> {
   revalidatePath('/', 'layout');
   redirect('/');
 }
+
+const signUpInlineSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, 'Senha precisa de pelo menos 8 caracteres'),
+});
+
+/**
+ * Cria conta e estabelece sessão em uma chamada. Usado no step 1b do
+ * onboarding. Requer Supabase project com email_confirm=OFF, senão
+ * o user fica em estado "criado mas sem sessão até confirmar".
+ */
+export async function signUpInline(input: {
+  email: string;
+  password: string;
+}): Promise<AuthActionResult> {
+  const parse = signUpInlineSchema.safeParse(input);
+  if (!parse.success) {
+    return { ok: false, error: parse.error.issues[0]?.message ?? 'Dados inválidos.' };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signUp({
+    email: parse.data.email,
+    password: parse.data.password,
+  });
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
+}
