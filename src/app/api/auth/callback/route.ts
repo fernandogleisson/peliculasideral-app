@@ -33,6 +33,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/signup?error=no_session`);
   }
 
+  // Profile exists → user has onboarded; send to next (default /eu).
+  // No profile → user hasn't completed onboarding yet; send to /onboarding.
   const { data: profile } = await supabase
     .from('profiles')
     .select('id')

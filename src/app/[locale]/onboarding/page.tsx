@@ -8,18 +8,23 @@ export const metadata = {
 
 export default async function OnboardingPage() {
   const supabase = await createSupabaseServerClient().catch(() => null);
+
+  // Visitante sem session: renderiza com step inicial (email).
   if (!supabase) {
-    return <OnboardingClient />;
+    return <OnboardingClient alreadyLoggedIn={false} />;
   }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // Sem session: começa pelo step email.
   if (!user) {
-    redirect('/signup');
+    return <OnboardingClient alreadyLoggedIn={false} />;
   }
 
-  // If already onboarded, skip to /eu
+  // Já logado: se profile completo → /eu; senão continua onboarding a partir
+  // do step `name`.
   const { data: profile } = await supabase
     .from('profiles')
     .select('id')
@@ -29,5 +34,5 @@ export default async function OnboardingPage() {
     redirect('/eu');
   }
 
-  return <OnboardingClient />;
+  return <OnboardingClient alreadyLoggedIn={true} />;
 }
