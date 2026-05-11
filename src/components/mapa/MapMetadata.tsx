@@ -2,6 +2,13 @@ import { Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+function formatBirthDate(iso: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!match) return iso;
+  const [, y, m, d] = match;
+  return `${d}/${m}/${y}`;
+}
+
 export interface MapMetadataProps {
   birthDate: string;
   birthTime?: string | null;
@@ -21,9 +28,12 @@ export function MapMetadata({
   rateLimitMessage,
   onEdit,
 }: MapMetadataProps) {
-  const formattedDate = new Date(birthDate).toLocaleDateString('pt-BR');
+  // Parse manual de YYYY-MM-DD pra evitar hydration mismatch:
+  // `new Date('1993-12-01')` é interpretado como UTC midnight, que vira
+  // 30/11 no client em UTC-3 e 01/12 no server em UTC.
+  const formattedDate = formatBirthDate(birthDate);
   const location = [birthCity, birthState].filter(Boolean).join('/');
-  const time = birthTime ?? '—';
+  const time = birthTime ? birthTime.slice(0, 5) : '—';
 
   return (
     <Card variant="default" className="flex items-center justify-between gap-4">
