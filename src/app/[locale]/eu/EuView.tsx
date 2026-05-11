@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Settings, Share2 } from 'lucide-react';
 
 import { Avatar } from '@/components/identity/Avatar';
@@ -14,7 +15,6 @@ import type { Sign } from '@/components/astro/ElementColors';
 import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { Button } from '@/components/ui/Button';
-import { IconButton } from '@/components/ui/IconButton';
 import { Card } from '@/components/ui/Card';
 import { Mandala, type ChartData } from '@/components/mapa/Mandala';
 import { HouseRing } from '@/components/mapa/HouseRing';
@@ -206,9 +206,13 @@ export function EuView(props: EuViewProps) {
           <span className="font-mono text-xs tracking-[0.3em] text-ink uppercase font-bold">
             EU
           </span>
-          <IconButton aria-label="Minha conta" variant="ghost" className="ml-auto">
+          <Link
+            href="/configuracoes"
+            aria-label="Configurações"
+            className="ml-auto inline-flex items-center justify-center w-10 h-10 rounded-full text-ink-2 hover:text-ink hover:bg-surface-2"
+          >
             <Settings size={20} />
-          </IconButton>
+          </Link>
         </Header>
 
         <div className="px-6 py-6 max-w-md mx-auto space-y-6">
