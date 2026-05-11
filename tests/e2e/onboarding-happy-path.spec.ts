@@ -36,9 +36,9 @@ test.describe('Onboarding happy path (new user)', () => {
     // step city (default São Paulo, idx 0)
     await page.getByRole('button', { name: /continuar/i }).click();
 
-    // step consent
+    // step review (com LGPD checkbox embutido)
     await page.getByRole('checkbox').check();
-    await page.getByRole('button', { name: /concluir/i }).click();
+    await page.getByRole('button', { name: /confirmar e gerar mapa/i }).click();
 
     // animação → /eu
     await expect(page).toHaveURL(/\/eu/, { timeout: 15000 });

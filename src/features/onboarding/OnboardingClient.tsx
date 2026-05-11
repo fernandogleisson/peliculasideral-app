@@ -19,7 +19,7 @@ type Step =
   | 'date'
   | 'time'
   | 'city'
-  | 'consent'
+  | 'review'
   | 'generating';
 
 interface FormState {
@@ -89,7 +89,7 @@ export function OnboardingClient({ alreadyLoggedIn = false }: OnboardingClientPr
       const result = await submitOnboarding(payload);
       if (!result.ok) {
         setError(result.error);
-        setStep('consent');
+        setStep('review');
       }
     });
   }
@@ -289,7 +289,7 @@ export function OnboardingClient({ alreadyLoggedIn = false }: OnboardingClientPr
         variant="input"
         title="Onde você nasceu?"
         subtitle="Beta fechado: cidades brasileiras. Mais lugares vêm em breve."
-        onNext={() => next('consent')}
+        onNext={() => next('review')}
       >
         <select
           value={form.cityIdx}
@@ -307,17 +307,61 @@ export function OnboardingClient({ alreadyLoggedIn = false }: OnboardingClientPr
     );
   }
 
-  if (step === 'consent') {
+  if (step === 'review') {
+    const city = BR_CITIES[form.cityIdx] as CityEntry;
+    const rows: Array<{ label: string; value: string; editTarget: Step }> = [
+      { label: 'Nome', value: form.displayName, editTarget: 'name' },
+      { label: '@', value: `@${form.username}`, editTarget: 'username' },
+      {
+        label: 'Nascimento',
+        value: new Date(form.birthDate + 'T00:00:00').toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
+        editTarget: 'date',
+      },
+      {
+        label: 'Horário',
+        value: form.birthTimeKnown ? form.birthTime : 'Não sei (mapa diurno aproximado)',
+        editTarget: 'time',
+      },
+      { label: 'Cidade', value: `${city.city} – ${city.state}`, editTarget: 'city' },
+    ];
+
     return (
       <OnboardingStep
         variant="input"
-        title="Última coisa"
-        subtitle="Pra criar seu perfil, precisamos do seu OK."
+        title="Confere se tá tudo certo"
+        subtitle="Você pode editar qualquer item antes de gerar o mapa."
         nextDisabled={!form.lgpdAccept || pending}
-        nextLabel={pending ? 'Gerando…' : 'Concluir'}
+        nextLabel={pending ? 'Gerando…' : 'Confirmar e gerar mapa'}
         onNext={submit}
       >
-        <label className="flex items-start gap-3 text-sm text-ink-2 leading-relaxed">
+        <div className="rounded-sm border border-border bg-surface-1 px-4">
+          {rows.map((r) => (
+            <div
+              key={r.label}
+              className="flex items-center justify-between gap-4 py-3 border-b border-border last:border-0"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-[10px] tracking-[0.2em] text-ink-3 uppercase">
+                  {r.label}
+                </p>
+                <p className="font-serif text-base text-ink mt-1 truncate">{r.value}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => next(r.editTarget)}
+                className="text-xs text-primary underline shrink-0"
+              >
+                Editar
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <label className="flex items-start gap-3 text-sm text-ink-2 leading-relaxed mt-6">
           <Checkbox
             checked={form.lgpdAccept}
             onCheckedChange={(v) => update('lgpdAccept', !!v)}
@@ -335,6 +379,7 @@ export function OnboardingClient({ alreadyLoggedIn = false }: OnboardingClientPr
             . Concordo que dados de nascimento sejam usados pra calcular o mapa.
           </span>
         </label>
+
         {error && <p className="text-sm text-danger mt-3">{error}</p>}
       </OnboardingStep>
     );
