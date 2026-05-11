@@ -1,0 +1,31 @@
+{
+  "common": {
+    "appName": "Pelicula Sideral",
+    "continue": "Continuar",
+    "back": "Atrás"
+  },
+  "landing": {
+    "headline": "Tu película sideral empieza aquí.",
+    "emailPlaceholder": "Tu correo electrónico",
+    "ctaContinue": "Continuar"
+  },
+  "nav": {
+    "eu": "Yo",
+    "cursos": "Cursos",
+    "semana": "De la Semana",
+    "dia": "Del Día",
+    "back": "VOLVER"
+  },
+  "lgpd": {
+    "banner": {
+      "text": "Usamos cookies para mejorar tu experiencia. Puedes aceptar todas o rechazar las no esenciales.",
+      "acceptAll": "Aceptar todas",
+      "rejectNonEssential": "Rechazar no esenciales",
+      "necessary": "Cookies necesarias (siempre)",
+      "analytics": "Cookies analíticas",
+      "marketing": "Cookies de marketing",
+      "customize": "Personalizar",
+      "savePreferences": "Guardar preferencias"
+    }
+  }
+}
