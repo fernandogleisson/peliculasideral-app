@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(`${origin}/signup?error=no_session`);
+    return NextResponse.redirect(`${origin}/entrar?error=no_session`);
   }
 
   // Profile exists → user has onboarded; send to next (default /eu).
