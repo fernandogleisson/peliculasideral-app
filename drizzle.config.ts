@@ -10,6 +10,9 @@ export default defineConfig({
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: { url },
+  // Exclude the `auth` schema — it is managed by Supabase Auth, not by us.
+  // auth-users.ts uses pgSchema('auth') only for read-only type mirroring.
+  schemaFilter: ['public'],
   verbose: true,
   strict: true,
 });

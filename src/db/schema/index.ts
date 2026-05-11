@@ -8,3 +8,4 @@ export * from './mapas';
 export * from './interpretations';
 export * from './interpretation-revisions';
 export * from './interpretation-review-assists';
+export * from './auth-users';
