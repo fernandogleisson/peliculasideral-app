@@ -41,30 +41,6 @@ const passwordSignupSchema = z.object({
   password: z.string().min(8, 'Senha precisa de pelo menos 8 caracteres'),
 });
 
-export async function signUpWithPassword(formData: FormData): Promise<AuthActionResult> {
-  const parse = passwordSignupSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  });
-  if (!parse.success) {
-    return { ok: false, error: parse.error.issues[0]?.message ?? 'Dados inválidos.' };
-  }
-
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signUp({
-    email: parse.data.email,
-    password: parse.data.password,
-    options: {
-      emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
-    },
-  });
-
-  if (error) {
-    return { ok: false, error: error.message };
-  }
-  return { ok: true, message: 'Conta criada. Confirme pelo link no email.' };
-}
-
 export async function signInWithPassword(formData: FormData): Promise<AuthActionResult> {
   const parse = passwordSignupSchema.safeParse({
     email: formData.get('email'),
