@@ -31,6 +31,9 @@ export async function generateMapaForProfile(profileId: string): Promise<Generat
     lng: Number(profile.birthLng),
     tz: profile.birthTz,
     houseSystem: 'placidus' as const,
+    name: profile.displayName ?? profile.username ?? 'User',
+    city: profile.birthCity ?? 'Unknown',
+    nation: profile.birthCountry ?? 'BR',
   };
 
   let chart;
