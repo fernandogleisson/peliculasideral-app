@@ -1,6 +1,31 @@
 # Supabase Auth Setup — Pelicula Sideral
 
-## Configurações obrigatórias no dashboard
+## Setup via script (recomendado)
+
+Script idempotente em duas fases. Pré-requisito: `SUPABASE_ACCESS_TOKEN` no
+`.env.local` (gere em https://supabase.com/dashboard/account/tokens).
+
+```bash
+./scripts/supabase-auth-setup.sh phase1   # closed beta: gate OFF + redirect URLs
+./scripts/supabase-auth-setup.sh phase2   # Fase 2: SMTP Resend + gate ON
+```
+
+Campos atualizados (validados contra a OpenAPI spec oficial em
+`https://api.supabase.com/api/v1-json`):
+
+| Fase | Campo                                                            | Valor                                                                       |
+| ---- | ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 1    | `mailer_autoconfirm`                                             | `true` (gate OFF)                                                           |
+| 1    | `external_email_enabled`                                         | `true`                                                                      |
+| 1    | `uri_allow_list`                                                 | CSV com 3 URLs (localhost:3001, localhost:3000, app.peliculasideral.com.br) |
+| 2    | `mailer_autoconfirm`                                             | `false` (gate ON)                                                           |
+| 2    | `smtp_host`                                                      | `smtp.resend.com`                                                           |
+| 2    | `smtp_port`                                                      | `587`                                                                       |
+| 2    | `smtp_user`, `smtp_pass`, `smtp_admin_email`, `smtp_sender_name` | via env vars                                                                |
+
+## Setup manual no dashboard (fallback)
+
+Se preferir não usar o token de API, faça pelo dashboard:
 
 Acesse https://supabase.com/dashboard/project/rurktxlnbssjjqxxklgu/auth
 
@@ -28,6 +53,9 @@ Banner soft prompt (`<EmailConfirmBanner />`) lembra de confirmar depois.
 
 Motivo: necessário pro paywall RPC `get_interpretation_long` funcionar.
 Pode ficar pra Fase 2.
+
+**Via API** (campos validados): `hook_custom_access_token_enabled=true` +
+`hook_custom_access_token_uri="pg-functions://postgres/public/set_tier_claim"`.
 
 ## SMTP (Resend) — Fase 2
 
